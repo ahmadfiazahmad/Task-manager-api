@@ -2,6 +2,9 @@ from fastapi import FastAPI
 
 app = FastAPI()
 
+# In-memory storage for tasks.
+tasks = []
+
 
 @app.get("/")
 def root():
@@ -17,3 +20,7 @@ def health_check():
     return {
         "status": "Healthy"
     }
+
+@app.get("/tasks")
+def get_tasks():
+    return tasks
