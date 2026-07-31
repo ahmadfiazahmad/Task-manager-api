@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException,status
 from pydantic import BaseModel
 
 app = FastAPI()
@@ -31,8 +31,15 @@ def get_tasks():
 
 
 # Creates a new task and stores it in memory.
-@app.post("/tasks")
+@app.post("/tasks", status_code=status.HTTP_201_CREATED)
 def create_task(task: Task):
+    print(">>> create_task() was called")
+
+    if not task.title.strip():
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Task title cannot be empty."
+        )
 
     new_task = {
         "id": len(tasks) + 1,
@@ -66,26 +73,33 @@ class TaskUpdate(BaseModel):
 @app.put("/tasks/{task_id}")
 def update_task(task_id: int, updated_task: TaskUpdate):
 
+    # Prevent empty or whitespace-only task titles.
+    if not updated_task.title.strip():
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Task title cannot be empty."
+        )
+
     for task in tasks:
         if task["id"] == task_id:
             task["title"] = updated_task.title
             return task
 
     raise HTTPException(
-        status_code=404,
+        status_code=status.HTTP_404_NOT_FOUND,
         detail="Task not found"
-    )      
+    )    
 
 # Deletes a task based on its ID.
-@app.delete("/tasks/{task_id}")
+@app.delete("/tasks/{task_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_task(task_id: int):
 
     for task in tasks:
         if task["id"] == task_id:
             tasks.remove(task)
-            return {
-                "message": "Task deleted successfully."
-            }
+            return 
+                
+            
 
     raise HTTPException(
         status_code=404,
