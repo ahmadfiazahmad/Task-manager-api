@@ -1,12 +1,19 @@
 from fastapi import FastAPI
 
-# Create the FastAPI application.
 app = FastAPI()
 
 
-# Root endpoint.
 @app.get("/")
 def root():
     return {
-        "message": "Hello, FlyRank Backend Internship!"
+        "application": "Task Manager API",
+        "version": "1.0.0",
+        "status": "Running"
+    }
+
+
+@app.get("/health")
+def health_check():
+    return {
+        "status": "Healthy"
     }
