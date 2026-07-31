@@ -1,9 +1,13 @@
 from fastapi import FastAPI
+from pydantic import BaseModel
 
 app = FastAPI()
 
 # In-memory storage for tasks.
 tasks = []
+# Defines the structure of data required to create a new task.
+class Task(BaseModel):
+    title: str
 
 
 @app.get("/")
@@ -24,3 +28,18 @@ def health_check():
 @app.get("/tasks")
 def get_tasks():
     return tasks
+
+
+# Creates a new task and stores it in memory.
+@app.post("/tasks")
+def create_task(task: Task):
+
+    new_task = {
+        "id": len(tasks) + 1,
+        "title": task.title,
+        "done": False
+    }
+
+    tasks.append(new_task)
+
+    return new_task
