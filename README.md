@@ -2,8 +2,7 @@
 
 A simple RESTful Task Manager API built with **Python** and **FastAPI**.
 
-The API allows users to perform basic CRUD (Create, Read, Update, Delete) operations on tasks. Task data is stored in memory using a Python list, so all data is lost when the server stops.
-
+A simple RESTful Task Manager API built with **Python** and **FastAPI** as part of the **FlyRank AI Backend Engineering Internship – Assignment 1**.
 ---
 
 # 📌 Features
